@@ -1,0 +1,35 @@
+version: "3.8"
+services:
+  vector_search:
+    container_name: 'postgres_vector_search'
+    image: postgres:15
+    command: postgres -c "max_connections=10000"
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - /home/izbushko/projects/vector_search:/var/lib/postgresql/data
+    networks:
+      - vector_search_network
+    ports:
+      - ${POSTGRES_PORT_TO_LOCAL_HOST}:5432
+  vector_search_app:
+    build: .
+    restart: unless-stopped
+    container_name: "vector_search"
+    env_file:
+      - .env
+    ports:
+      - "${APP_PORT}:8787"
+    volumes:
+      - /home/izbushko/projects/vector_search/vector_search/logs:/app/logs
+    networks:
+      - vector_search_network
+    depends_on:
+      - vector_search
+      - pg_web
+networks:
+  vector_search_network:
+    external: false
