@@ -5,7 +5,6 @@ from langchain_postgres import PGVector
 from langchain_postgres.vectorstores import PGVector
 from app.services.retrievers import get_parent_retriever
 
-OPENAI_API_KEY="REMOVED"
 embeddings = OpenAIEmbeddings(
     openai_api_key=OPENAI_API_KEY,
     model="text-embedding-3-large")
